@@ -3,6 +3,21 @@
 本文件记录对外可见的变更。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.4.1] - 2026-10-30
+
+### 修复
+
+- **peer 区间放行宿主预发布版本**：`@deepseek-ai/dsh-*` 的 peer 由 `^0.2.0-rc.2` 改为
+  `>=0.2.0-rc.2 <0.2.1-0 || >=0.2.1-rc.2 <0.3.0-0`。semver 只让「带预发布标签且 tuple 相同」的比较符放行预发布版本，
+  所以 `^0.2.0-rc.2` 不匹配当前宿主 `0.2.1-rc.5`，用 npm 安装时会报 `ERESOLVE`。
+
+### 变更
+
+- `package.json` 补齐仓库元数据：`author`、`repository`、`homepage`、`bugs`（指向 `github.com/GraptK/dsh-composer-enhance`），
+  这是 awesome-dsh-plugin 收录与 npm 包仓库关联的必需项。
+- `LICENSE` 版权行由旧包名 `dsh-enhance-prompt contributors` 改为 `GraptK`。
+- 宿主半检查 57 → 58 项（peer 区间断言改为检查显式预发布分支）。
+
 ## [0.4.0] - 2026-10-30
 
 ### 功能

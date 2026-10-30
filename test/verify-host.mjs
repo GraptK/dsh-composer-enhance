@@ -27,10 +27,17 @@ console.log('\n[1] manifest 与文件清单');
 const pkg = JSON.parse(readFileSync(abs('package.json'), 'utf8'));
 ok('name / version / license / type', () => {
   assert.equal(pkg.name, 'dsh-composer-enhance');
-  assert.equal(pkg.version, '0.4.0');
+  assert.equal(pkg.version, '0.4.1');
   assert.equal(pkg.license, 'MIT');
   assert.equal(pkg.type, 'module');
   assert.equal(pkg.private, undefined, 'private 必须不存在');
+});
+ok('仓库元数据（awesome 收录与 npm 仓库关联都要它）', () => {
+  assert.equal(pkg.author, 'GraptK');
+  assert.equal(pkg.repository.url, 'git+https://github.com/GraptK/dsh-composer-enhance.git');
+  assert.equal(pkg.homepage, 'https://github.com/GraptK/dsh-composer-enhance#readme');
+  assert.equal(pkg.bugs.url, 'https://github.com/GraptK/dsh-composer-enhance/issues');
+  assert.ok(pkg.keywords.includes('dsh-plugin'), 'keywords 需含 dsh-plugin（awesome 要求仓库带同名 topic）');
 });
 ok('engines.node 与 engines.dsh（插件市场据此判定宿主兼容性）', () => {
   assert.equal(pkg.engines.node, '>=20');
@@ -39,13 +46,14 @@ ok('engines.node 与 engines.dsh（插件市场据此判定宿主兼容性）', 
   // 而 DSH 的判定带 includePrerelease，写成区间才能同时容纳 0.2.x 与 0.3.x。
   assert.equal(pkg.engines.dsh, '>=0.2.0-rc.2 <1.0.0');
 });
-ok('每个 @deepseek-ai/dsh-* peer 区间一致，且都被 engines.dsh 覆盖', () => {
+ok('每个 @deepseek-ai/dsh-* peer 区间一致，且放行宿主预发布版本', () => {
   const dshPeers = Object.entries(pkg.peerDependencies).filter(([k]) => k.startsWith('@deepseek-ai/dsh-'));
   assert.equal(dshPeers.length, 7);
   const ranges = new Set(dshPeers.map(([, v]) => v));
   assert.equal(ranges.size, 1, `peer 区间不一致: ${[...ranges].join(' | ')}`);
-  // peer 是最小可用区间（^0.2.0-rc.2），engines 是宿主侧范围（放行 0.3.x）。
-  assert.equal([...ranges][0], '^0.2.0-rc.2');
+  // ^0.2.0-rc.2 不匹配 0.2.1-rc.5：semver 只放行「有同 tuple 预发布比较符」的预发布版本，
+  // 所以要显式写两个 || 分支（awesome-dsh-plugin contributing.md 的 peer 预发布陷阱一节）。
+  assert.equal([...ranges][0], '>=0.2.0-rc.2 <0.2.1-0 || >=0.2.1-rc.2 <0.3.0-0');
   assert.ok(pkg.engines.dsh.includes('<1.0.0'));
 });
 ok('dependencies 带 schemastery（Config 才是原生 schema）；它不是 peer，避免宿主再验一遍', () => {
