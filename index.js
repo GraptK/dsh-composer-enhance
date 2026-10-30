@@ -249,7 +249,10 @@ function collectFidelityFacts(input) {
       push(match[1] ?? match[0]);
     }
   }
-  return facts.slice(0, MAX_FIDELITY_FACTS);
+  // 同一个 URL 会被"URL"与"路径"两条正则各命中一次（`/example.com/docs/api` 是 URL 的子串），
+  // 子串事实只会让缺失清单出现重复项，这里只保留更长的那个。
+  const kept = facts.filter((fact) => !facts.some((other) => other !== fact && other.includes(fact)));
+  return kept.slice(0, MAX_FIDELITY_FACTS);
 }
 
 /** 返回原文里有、改写结果里没逐字出现的硬事实（保真闸的判定核心）。 */

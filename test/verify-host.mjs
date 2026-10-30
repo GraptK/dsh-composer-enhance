@@ -683,6 +683,16 @@ await okAsync('保真闸（S1）：硬事实丢失 → 硬失败，不写回，�
   assert.ok(line && line.includes('fidelity=missing:'), line);
 });
 
+await okAsync('保真闸（S1）：URL 不重复计入"路径"事实（缺失清单去子串噪音）', async () => {
+  infos.length = 0;
+  const m = mount(undefined, { stream: async function* () { yield { type: 'text-delta', text: '参考文档即可。' }; } });
+  const result = await call(m.definition, payload('参考 https://api.example.com/docs 这里，别改链接。'));
+  assert.equal(result.kind, 'error');
+  const list = result.text.match(/\(missing: (.*)\)\.$/);
+  assert.ok(list, result.text);
+  assert.deepEqual(list[1].split(', '), ['https://api.example.com/docs']);
+});
+
 await okAsync('保真闸（S1）：硬事实全部保留 → 成功，日志 fidelity=ok', async () => {
   infos.length = 0;
   const kept = '把 `src/app.ts` 里的 `loadUser()` 改成 v1.2.3 的签名，参考 https://api.example.com/docs ，别动 ProseMirror 那部分，只改签名。';
