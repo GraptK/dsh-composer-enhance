@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Enhance prompt",
+    "description": "Rewrite the current draft into a clearer, more specific prompt before sending; cancellable and revertible"
+  }
+}

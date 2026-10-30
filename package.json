@@ -1,0 +1,86 @@
+{
+  "name": "dsh-composer-enhance",
+  "version": "0.4.0",
+  "description": "One model call rewrites the composer draft — or just the selected fragment — into a sharper, ready-to-send prompt. Cancellable, revertible, and aware of the recent conversation. · DSH 输入框「增强提示词」插件：发送前把草稿（或只把选中的片段）改写成更清晰、更具体的提示词，可参考本会话最近对话，可取消、可回退。",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "client-plugin",
+    "prompt",
+    "prompt-engineering",
+    "composer",
+    "i18n"
+  ],
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.0-rc.2 <1.0.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/dsh-agent-default-model": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-api-remotes": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-locale": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-conversation": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-commands": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-llm": "^0.2.0-rc.2",
+    "react": "^18.2.0"
+  },
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "prompts.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.en.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/verify-host.mjs && node test/verify-client.mjs && node test/verify-manifest-yaml.mjs",
+    "test:live": "node test/live.mjs",
+    "check": "node --check index.js && node --check prompts.js && node --check client.js",
+    "prepublishOnly": "node --check index.js && node --check prompts.js && node --check client.js"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  },
+  "icon": "./icon.svg",
+  "meta": {
+    "title": "增强提示词",
+    "description": "发送前把当前草稿改写成更清晰、更具体的提示词（会参考本会话最近对话；Ctrl+点击可只改选中片段），可取消、可回退"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.5"
+  }
+}

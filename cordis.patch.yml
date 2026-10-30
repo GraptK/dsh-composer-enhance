@@ -1,0 +1,29 @@
+# dsh-composer-enhance bundle patch
+#
+# 安装（官方 CLI 或插件管理器）时，这一行把插件的 Host 半挂进 profile 的 Cordis 树：
+#
+#   plugin_manager action=install_bundle target=dsh-composer-enhance
+#
+# `name` 由 profile 自己的 node_modules 解析，必须等于包名。
+#
+# `config` 是插件唯一的可调项，缺省值与 index.js 的 DEFAULT_* 完全一致：
+# - temperature  0 ~ 2
+# - maxTokens    1 ~ 8192（正整数）
+# - timeoutMs    1000 ~ 600000（模型调用超时）
+# 会话历史上下文（改写时参考本会话最近几轮对话）：
+# - history                true / false        总开关；false 时点击一律只改草稿
+# - historyTurns           1 ~ 12              带最近几轮（自动模式）
+# - historyMaxChars        200 ~ 12000         历史总预算（字符）
+# - historyPerMessageChars 100 ~ 4000          单条消息裁剪后上限（头 40% + 尾 60%）
+# 越界或非数字会被 index.js 的 readOptions() 回落到默认值，不会让插件加载失败。
+- insert:
+    - id: dsh-composer-enhance
+      name: 'dsh-composer-enhance'
+      config:
+        temperature: 0.3
+        maxTokens: 2048
+        timeoutMs: 60000
+        history: true
+        historyTurns: 3
+        historyMaxChars: 3000
+        historyPerMessageChars: 800
