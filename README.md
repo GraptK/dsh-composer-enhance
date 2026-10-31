@@ -14,7 +14,7 @@ DSH（DeepSeek Harness）插件：在输入框发送键前加一个「增强提�
 - **保真闸**：草稿里的反引号片段 / URL / 路径 / 版本号必须逐字保留，否则拒绝写回；**长度闸**：输出不能扩写成 2.5 倍以上
 - **引用 chip 保护**：草稿里有 `@文件`/引用时禁用按钮，避免把 chip 抹成纯文本
 
-> 包名从 `dsh-composer-enhance` 改为 `dsh-composer-enhance`（v0.4.0）：原名在 npm 已被占用（`github.com/adcx222/dsh-composer-enhance`）。
+> 包名从 `dsh-enhance-prompt` 改为 `dsh-composer-enhance`（v0.4.0）：原名在 npm 已被占用（收录于 awesome-dsh-plugin 目录的 `github.com/adcx222/dsh-enhance-prompt`）。
 
 ## 安装
 
